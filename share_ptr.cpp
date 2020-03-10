@@ -54,7 +54,7 @@ class shared_ptr{
                 delete d_ptr;
                 d_referenc_count = nullptr;
                 d_ptr = nullptr;
-                //std::cout<<"release \n";
+                std::cout<<"release \n";
                 return;
             }
             (*d_referenc_count)--;
@@ -70,11 +70,22 @@ shared_ptr<_T> makeshared (Args&&...args){
 class myclass{
     int x,y;
   public:
-    myclass(){};
+    myclass(){std::cout<<"default construct myclass\n";};
+    myclass(int a, int b){std::cout<<"construct myclass\n"; x = a; y = b;};
+    myclass(const myclass& o){
+        std::cout<<"copy construct myclass\n";
+        x = o.x;
+        y = o.y;
+    }
+    ~myclass(){
+        std::cout<<"destruct myclass\n";
+    }
     void set(int a, int b){x=a;y=b;}
     int getx(){return x;}
     int gety(){return y;}
 };
+
+
 int main() {
     /*
     cout<<getmax(12.4,15.1)<<endl;
@@ -91,11 +102,13 @@ int main() {
     (*ptr).set(2,4);
     std::cout<<(*ptr).getx()<<std::endl;
     std::cout<<(*ptr).gety()<<std::endl;
-    auto bb = ptr;
+    auto bb = MySmartPointer::makeshared<myclass>(7,8);
     auto cc = bb;
     std::cout<<(*bb).getx()<<std::endl;
     std::cout<<(*cc).gety()<<std::endl;
     std::cout<<bb->getx()<<std::endl;
+    std::cout<<cc->gety()<<std::endl;
+    cc = MySmartPointer::makeshared<myclass>(*ptr);
     std::cout<<cc->gety()<<std::endl;
     return 0;
 }
